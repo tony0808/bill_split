@@ -7,4 +7,8 @@ class Order {
   const Order({required this.total, required this.items});
 
   static const empty = Order(total: 0.0, items: []);
+
+  List<String> getItemNames() {
+    return items.map((item) => item.name).toList();
+  }
 }

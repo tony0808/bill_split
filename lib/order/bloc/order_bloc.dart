@@ -17,6 +17,13 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
     final currentOrder = state.order;
     final currentItems = currentOrder.items;
 
+    bool nameExists = currentItems.any((item) => item.name == event.item.name);
+
+    if (nameExists) {
+      emit(state.copyWith(status: OrderStatus.error, errorMessage: 'Item already exists.'));
+      return;
+    }
+
     final List<Item> newItems = [...currentItems, event.item];
     final newTotal = currentOrder.total + event.item.price * event.item.quantity;
 
@@ -29,7 +36,6 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
     final currentOrder = state.order;
     final currentItems = currentOrder.items;
 
-
     double newTotal = currentOrder.total;
 
     List<Item> newItems = [...currentItems];
@@ -38,7 +44,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
     newItems.removeAt(event.index);
     newItems.insert(event.index, event.item);
     newTotal += event.item.price * event.item.quantity;
-   
+
     final newOrder = Order(total: newTotal, items: newItems);
 
     emit(state.copyWith(order: newOrder, status: OrderStatus.edited));
@@ -53,8 +59,8 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
     List<Item> newItems = [...currentItems];
     Item itemToDelete = newItems.elementAt(event.index);
     newTotal -= itemToDelete.price * itemToDelete.quantity;
-    newItems.removeAt(event.index); 
-    
+    newItems.removeAt(event.index);
+
     final order = Order(total: newTotal, items: newItems);
 
     emit(state.copyWith(order: order, status: OrderStatus.deleted));

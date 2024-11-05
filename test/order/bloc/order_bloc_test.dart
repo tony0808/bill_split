@@ -16,11 +16,11 @@ void main() {
       blocTest<OrderBloc, OrderState>(
         'adds item in an empty list and emits [OrderStatus.added] with correct total',
         build: () => orderBloc,
-        act: (bloc) => bloc.add(const OrderAddItemEvent(Item(price: 20.50, name: 'Sea Food', quantity: 2))),
+        act: (bloc) => bloc.add(const OrderAddItemEvent(Item(price: 15.00, name: 'Sea Food', quantity: 2))),
         expect: () => [
           isA<OrderState>()
               .having((state) => state.status, 'status', OrderStatus.added)
-              .having((state) => state.order.total, 'total', 20.50),
+              .having((state) => state.order.total, 'total', 30.00),
         ],
       );
 
@@ -31,14 +31,31 @@ void main() {
           order: const Order(items: [
             Item(price: 40.50, name: 'Sea Food', quantity: 1),
             Item(price: 50.50, name: 'Pasta', quantity: 1),
-            Item(price: 5.00, name: 'Pasta', quantity: 3),
-          ], total: 106.00),
+            Item(price: 5.00, name: 'Beer', quantity: 3),
+          ], total: 116.00),
         ),
-        act: (bloc) => bloc.add(const OrderAddItemEvent(Item(price: 2.00, name: 'Sea Food', quantity: 5))),
+        act: (bloc) => bloc.add(const OrderAddItemEvent(Item(price: 2.00, name: 'Carbonara', quantity: 5))),
         expect: () => [
           isA<OrderState>()
               .having((state) => state.status, 'status', OrderStatus.added)
-              .having((state) => state.order.total, 'total', 116.00),
+              .having((state) => state.order.total, 'total', 126.00),
+        ],
+      );
+
+      blocTest<OrderBloc, OrderState>(
+        'emits [OrderStatus.error]',
+        build: () => orderBloc,
+        seed: () => OrderState(
+          order: const Order(items: [
+            Item(price: 40.50, name: 'Sea Food', quantity: 1),
+            Item(price: 50.50, name: 'Pasta', quantity: 1),
+            Item(price: 5.00, name: 'Beer', quantity: 3),
+          ], total: 106.00),
+        ),
+        act: (bloc) => bloc.add(const OrderAddItemEvent(Item(price: 15.00, name: 'Sea Food', quantity: 2))),
+        expect: () => [
+          isA<OrderState>()
+              .having((state) => state.status, 'status', OrderStatus.error).having((status) => status.errorMessage, 'errorMessage', 'Item already exists.')
         ],
       );
     });
@@ -50,7 +67,7 @@ void main() {
                 order: const Order(items: [
                   Item(price: 40.50, name: 'Sea Food', quantity: 1),
                   Item(price: 50.50, name: 'Pasta', quantity: 1),
-                  Item(price: 5.00, name: 'Pasta', quantity: 3),
+                  Item(price: 5.00, name: 'Beer', quantity: 3),
                 ], total: 106.00),
               ),
           act: (bloc) => bloc.add(const OrderEditItemEvent(0, Item(name: 'Item', price: 49.50, quantity: 1))),
@@ -68,7 +85,7 @@ void main() {
                 order: const Order(items: [
                   Item(price: 40.50, name: 'Sea Food', quantity: 1),
                   Item(price: 50.50, name: 'Pasta', quantity: 1),
-                  Item(price: 5.00, name: 'Pasta', quantity: 3),
+                  Item(price: 5.00, name: 'Beer', quantity: 3),
                 ], total: 106.00),
               ),
           act: (bloc) => bloc.add(const OrderDeleteItemEvent(0)),
