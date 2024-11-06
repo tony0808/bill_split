@@ -1,5 +1,5 @@
+import 'package:bill_split/dashboard/view/dashboard_page.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});
@@ -10,12 +10,9 @@ class Home extends StatelessWidget {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(70),
         child: AppBar(
-          centerTitle: true,
-          title: Text(
+          title: const Text(
             'Splitit',
-            style: GoogleFonts.rowdies(color: Colors.white, fontSize: 48),
           ),
-          backgroundColor: Theme.of(context).primaryColor,
         ),
       ),
       body: Column(
@@ -28,11 +25,9 @@ class Home extends StatelessWidget {
               width: 390,
               height: 60,
               child: ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).primaryColor,
-                  foregroundColor: Colors.white,
-                ),
+                onPressed: () {
+                  Navigator.of(context).pushReplacement(DashboardPage.route());
+                },
                 child: const Text(
                   'Create Bill',
                   style: TextStyle(fontSize: 32),
