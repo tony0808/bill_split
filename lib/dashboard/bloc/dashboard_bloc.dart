@@ -8,6 +8,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   DashboardBloc() : super(const DashboardState()) {
     on<DashboardOrderCompletedEvent>(_onOrderCompleted);
     on<DashboardGroupCompletedEvent>(_onGroupCompleted);
+    on<DashboardResetEvent>(_onOrderReset);
   }
 
   void _onOrderCompleted(DashboardOrderCompletedEvent event, Emitter<DashboardState> emit) {
@@ -16,5 +17,9 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
   void _onGroupCompleted(DashboardGroupCompletedEvent event, Emitter<DashboardState> emit) {
     emit(state.copyWith(status: DashboardStatus.groupCreated));
+  }
+
+  void _onOrderReset(DashboardResetEvent event, Emitter<DashboardState> emit) {
+    emit(state.copyWith(status: DashboardStatus.initial));
   }
 }

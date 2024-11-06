@@ -6,3 +6,5 @@ sealed class DashboardEvent {}
 class DashboardOrderCompletedEvent extends DashboardEvent {}
 
 class DashboardGroupCompletedEvent extends DashboardEvent {}
+
+class DashboardResetEvent extends DashboardEvent {}

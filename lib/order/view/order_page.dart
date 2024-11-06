@@ -1,4 +1,8 @@
 import 'package:bill_split/dashboard/bloc/dashboard_bloc.dart';
+import 'package:bill_split/order/bloc/order_bloc.dart';
+import 'package:bill_split/order/widgets/food_item_form.dart';
+import 'package:bill_split/order/widgets/order_list.dart';
+import 'package:bill_split/order/widgets/total_amount.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -9,6 +13,26 @@ class OrderPage extends StatelessWidget {
     return MaterialPageRoute(builder: (_) => const OrderPage());
   }
 
+  void openBottomModalSheetForItemAddition(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) => const FoodItemForm(),
+    );
+  }
+
+  void navigateBackToDashboard(BuildContext context) {
+    final orderState = context.read<OrderBloc>().state;
+
+    if (orderState.order.items.isNotEmpty) {
+      context.read<DashboardBloc>().add(DashboardOrderCompletedEvent());
+    }
+    else {
+      context.read<DashboardBloc>().add(DashboardResetEvent());
+    }
+    
+    Navigator.pop(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,12 +40,23 @@ class OrderPage extends StatelessWidget {
         preferredSize: const Size.fromHeight(70),
         child: AppBar(
           iconTheme: const IconThemeData(color: Colors.white),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              navigateBackToDashboard(context);
+            },
+          ),
           actions: [
             Container(
               margin: const EdgeInsets.fromLTRB(0, 0, 15, 0),
               child: IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.add, size: 35,),
+                onPressed: () {
+                  openBottomModalSheetForItemAddition(context);
+                },
+                icon: const Icon(
+                  Icons.add,
+                  size: 35,
+                ),
               ),
             )
           ],
@@ -31,7 +66,12 @@ class OrderPage extends StatelessWidget {
           backgroundColor: Theme.of(context).primaryColor,
         ),
       ),
-     
+      body: const Column(
+        children: [
+          TotalAmount(),
+          Expanded(child: OrderList()),
+        ],
+      ),
     );
   }
 }
