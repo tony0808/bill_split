@@ -14,7 +14,7 @@ class TotalAmount extends StatelessWidget {
         width: double.infinity,
         margin: const EdgeInsets.only(top: 30),
         child: Text(
-          '\$${state.order.total}',
+          '\$${state.order.total.toStringAsFixed(2)}',
           style: GoogleFonts.moul(
             fontSize: 48,
             fontWeight: FontWeight.bold,

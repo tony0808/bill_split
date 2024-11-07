@@ -16,3 +16,10 @@ class GroupDeletePersonEvent extends GroupEvent {
 
   const GroupDeletePersonEvent(this.index);
 }
+
+class GroupAssignItemEvent extends GroupEvent {
+  final Person person;
+  final int index;
+
+  const GroupAssignItemEvent(this.index, this.person);
+}

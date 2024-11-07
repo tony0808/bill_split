@@ -1,5 +1,4 @@
-
-
+import 'package:bill_split/group/models/assigned_item.dart';
 
 class Person {
   final String name;
@@ -20,5 +19,3 @@ class Person {
   int get hashCode => name.hashCode;
 }
 
-class AssignedItem {
-}

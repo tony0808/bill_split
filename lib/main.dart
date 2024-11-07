@@ -7,7 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 void main() {
-  const primaryColor = Color.fromARGB(255, 141, 26, 176);
+  const primaryColor = Color.fromARGB(255, 57, 142, 145);
 
   runApp(
     MultiBlocProvider(

@@ -1,5 +1,6 @@
 import 'package:bill_split/order/bloc/order_bloc.dart';
 import 'package:bill_split/order/models/item.dart';
+import 'package:bill_split/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -33,7 +34,7 @@ class _ItemFormState extends State<FoodItemForm> {
     _nameController = TextEditingController(text: nameText);
     _priceController = TextEditingController(text: priceText);
     _quantityController = TextEditingController(text: quantityText);
-    
+
     super.initState();
   }
 
@@ -57,6 +58,8 @@ class _ItemFormState extends State<FoodItemForm> {
     );
 
     context.read<OrderBloc>().add(OrderAddItemEvent(newItem));
+
+    Navigator.of(context).pop();
   }
 
   void editFoodItem() {
@@ -71,6 +74,8 @@ class _ItemFormState extends State<FoodItemForm> {
     );
 
     context.read<OrderBloc>().add(OrderEditItemEvent(widget.index!, newItem));
+
+    Navigator.of(context).pop();
   }
 
   @override
@@ -85,19 +90,22 @@ class _ItemFormState extends State<FoodItemForm> {
       child: Column(
         children: [
           const SizedBox(height: 30),
-          _CustomTextField(
+          CustomTextField(
             controller: _nameController,
             hintText: 'Enter food name',
+            type: TextInputType.text,
           ),
           const SizedBox(height: 30),
-          _CustomTextField(
+          CustomTextField(
             controller: _priceController,
             hintText: 'Enter price',
+            type: TextInputType.number,
           ),
           const SizedBox(height: 30),
-          _CustomTextField(
+          CustomTextField(
             controller: _quantityController,
             hintText: 'Enter quantity',
+            type: TextInputType.number,
           ),
           const SizedBox(height: 40),
           Container(
@@ -107,7 +115,6 @@ class _ItemFormState extends State<FoodItemForm> {
                 ElevatedButton(
                   onPressed: () {
                     widget.isEdit ? editFoodItem() : createNewFoodItem();
-                    Navigator.of(context).pop();
                   },
                   child: widget.isEdit ? const Text('Update') : const Text('Create'),
                 ),
@@ -122,28 +129,6 @@ class _ItemFormState extends State<FoodItemForm> {
             ),
           )
         ],
-      ),
-    );
-  }
-}
-
-class _CustomTextField extends StatelessWidget {
-  final TextEditingController controller;
-  final String hintText;
-
-  const _CustomTextField({required this.controller, required this.hintText});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-      child: TextField(
-        controller: controller,
-        keyboardType: TextInputType.number,
-        decoration: InputDecoration(
-          hintText: hintText,
-          border: const UnderlineInputBorder(),
-        ),
       ),
     );
   }

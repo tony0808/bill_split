@@ -1,6 +1,6 @@
 part of 'group_bloc.dart';
 
-enum GroupStatus { initial, added, deleted, error }
+enum GroupStatus { initial, added, deleted, assigned, error }
 
 class GroupState {
   final Group group;

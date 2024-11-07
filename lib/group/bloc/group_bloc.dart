@@ -10,6 +10,7 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
   GroupBloc() : super(const GroupState()) {
     on<GroupAddPersonEvent>(_onAddPerson);
     on<GroupDeletePersonEvent>(_onDeletePerson);
+    on<GroupAssignItemEvent>(_onAssignItem);
   }
 
   void _onAddPerson(GroupAddPersonEvent event, Emitter<GroupState> emit) {
@@ -39,5 +40,19 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
     final newGroup = Group(people: newPeople);
 
     emit(state.copyWith(group: newGroup, status: GroupStatus.deleted));
+  }
+
+  void _onAssignItem(GroupAssignItemEvent event, Emitter<GroupState> emit) {
+    
+    final group = state.group;
+    final people = group.people;
+
+    List<Person> newPeople = [...people];
+    newPeople.removeAt(event.index);
+    newPeople.insert(event.index, event.person);
+
+    final newGroup = Group(people: newPeople);
+    
+    emit(state.copyWith(group: newGroup, status: GroupStatus.assigned));
   }
 }
