@@ -1,6 +1,8 @@
 import 'package:bill_split/dashboard/bloc/dashboard_bloc.dart';
+import 'package:bill_split/dashboard/models/summary_data.dart';
 import 'package:bill_split/group/view/group_page.dart';
 import 'package:bill_split/order/view/order_page.dart';
+import 'package:bill_split/summary/view/summary_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -193,7 +195,10 @@ class DashboardGroupCreated extends StatelessWidget {
             fontSize: 32,
             isVerified: false,
             title: 'Calculate',
-            onPressed: () {},
+            onPressed: () {
+              SummaryData summaryData = context.read<DashboardBloc>().state.summaryData;
+              Navigator.of(context).push(MaterialPageRoute(builder: (_) => SummaryPage(data: summaryData.debtMap)));
+            },
           ),
         ],
       ),

@@ -4,12 +4,17 @@ enum DashboardStatus { initial, orderCreated, groupCreated }
 
 class DashboardState {
   final DashboardStatus status;
+  final SummaryData summaryData;
 
-  const DashboardState({this.status = DashboardStatus.initial});
+  const DashboardState({this.status = DashboardStatus.initial, this.summaryData = SummaryData.empty});
 
-  DashboardState copyWith({DashboardStatus? status}) {
+  DashboardState copyWith({
+    DashboardStatus? status,
+    SummaryData? summaryData,
+  }) {
     return DashboardState(
-      status: status ?? this.status
+      summaryData: summaryData ?? this.summaryData,
+      status: status ?? this.status,
     );
   }
 }

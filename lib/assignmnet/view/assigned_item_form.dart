@@ -1,5 +1,5 @@
 import 'package:bill_split/group/bloc/group_bloc.dart';
-import 'package:bill_split/group/models/assigned_item.dart';
+import 'package:bill_split/assignmnet/models/assigned_item.dart';
 import 'package:bill_split/group/models/person.dart';
 import 'package:bill_split/order/bloc/order_bloc.dart';
 import 'package:bill_split/order/models/item.dart';
@@ -29,6 +29,10 @@ class _AssignedItemFormState extends State<AssignedItemForm> {
   }
 
   void createAssignedItem(BuildContext context, int index, Person person) {
+    if (areValuesEmpty()) {
+      return;
+    }
+
     final foodItems = context.read<OrderBloc>().state.order.items;
     final selectedFoodItem = _menuController.text;
 
@@ -45,6 +49,12 @@ class _AssignedItemFormState extends State<AssignedItemForm> {
     );
 
     context.read<GroupBloc>().add(GroupAssignItemEvent(index, newPerson));
+
+    Navigator.of(context).pop();
+  }
+
+  bool areValuesEmpty() {
+    return _menuController.text.isEmpty || _quantityController.text.isEmpty;
   }
 
   @override
@@ -76,7 +86,6 @@ class _AssignedItemFormState extends State<AssignedItemForm> {
                 ElevatedButton(
                   onPressed: () {
                     createAssignedItem(context, widget.index, widget.person);
-                    Navigator.of(context).pop();
                   },
                   child: const Text('Create'),
                 ),

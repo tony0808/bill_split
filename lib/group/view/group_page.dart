@@ -3,6 +3,7 @@ import 'package:bill_split/group/bloc/group_bloc.dart';
 import 'package:bill_split/group/models/person.dart';
 import 'package:bill_split/group/widgets/group_list.dart';
 import 'package:bill_split/group/widgets/person_form.dart';
+import 'package:bill_split/order/bloc/order_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -21,7 +22,8 @@ class GroupPage extends StatelessWidget {
   }
 
   void navigateBackToDashboard(BuildContext context) {
-
+    
+    final foodItems = context.read<OrderBloc>().state.order.items;
     final people = context.read<GroupBloc>().state.group.people;
     bool isVerified = people.isNotEmpty;
 
@@ -31,8 +33,8 @@ class GroupPage extends StatelessWidget {
         break;
       }
     }
-
-    context.read<DashboardBloc>().add(isVerified ? DashboardGroupCompletedEvent() : DashboardOrderCompletedEvent());
+    
+    context.read<DashboardBloc>().add(isVerified ? DashboardGroupCompletedEvent(foodItems, people) : DashboardOrderCompletedEvent());
 
     Navigator.of(context).pop();
   }

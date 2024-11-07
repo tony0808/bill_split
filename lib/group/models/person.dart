@@ -1,4 +1,4 @@
-import 'package:bill_split/group/models/assigned_item.dart';
+import 'package:bill_split/assignmnet/models/assigned_item.dart';
 
 class Person {
   final String name;

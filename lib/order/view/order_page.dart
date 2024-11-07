@@ -1,4 +1,6 @@
 import 'package:bill_split/dashboard/bloc/dashboard_bloc.dart';
+import 'package:bill_split/group/bloc/group_bloc.dart';
+import 'package:bill_split/group/models/person.dart';
 import 'package:bill_split/order/bloc/order_bloc.dart';
 import 'package:bill_split/order/widgets/food_item_form.dart';
 import 'package:bill_split/order/widgets/order_list.dart';
@@ -22,14 +24,29 @@ class OrderPage extends StatelessWidget {
 
   void navigateBackToDashboard(BuildContext context) {
     final orderState = context.read<OrderBloc>().state;
+    final groupState = context.read<GroupBloc>().state;
+    final people = groupState.group.people;
 
-    if (orderState.order.items.isNotEmpty) {
-      context.read<DashboardBloc>().add(DashboardOrderCompletedEvent());
+    bool isGroupVerified = people.isNotEmpty;
+
+    for (Person person in people) {
+      if (!person.isAssigned) {
+        isGroupVerified = false;
+        break;
+      }
     }
-    else {
+
+    if (isGroupVerified) {
+      final foodItems = context.read<OrderBloc>().state.order.items;
+      final people = context.read<GroupBloc>().state.group.people;
+      context.read<DashboardBloc>().add(DashboardGroupCompletedEvent(foodItems, people));
+    }
+    else if (orderState.order.items.isNotEmpty) {
+      context.read<DashboardBloc>().add(DashboardOrderCompletedEvent());
+    } else {
       context.read<DashboardBloc>().add(DashboardResetEvent());
     }
-    
+
     Navigator.pop(context);
   }
 

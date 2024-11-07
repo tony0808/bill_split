@@ -46,7 +46,15 @@ class _ItemFormState extends State<FoodItemForm> {
     super.dispose();
   }
 
-  void createNewFoodItem() {
+  void createFoodItem() {
+    if (areValuesEmpty()) {
+      return;
+    }
+
+    if(!areTypesValid()) {
+      return;
+    }
+
     final price = double.parse(_priceController.text);
     final name = _nameController.text;
     final quantity = int.parse(_quantityController.text);
@@ -57,25 +65,19 @@ class _ItemFormState extends State<FoodItemForm> {
       quantity: quantity,
     );
 
-    context.read<OrderBloc>().add(OrderAddItemEvent(newItem));
+    context
+        .read<OrderBloc>()
+        .add(widget.isEdit ? OrderEditItemEvent(widget.index!, newItem) : OrderAddItemEvent(newItem));
 
     Navigator.of(context).pop();
   }
 
-  void editFoodItem() {
-    final price = double.parse(_priceController.text);
-    final name = _nameController.text;
-    final quantity = int.parse(_quantityController.text);
+  bool areValuesEmpty() {
+    return _priceController.text.isEmpty || _nameController.text.isEmpty || _quantityController.text.isEmpty;
+  }
 
-    Item newItem = Item(
-      price: price,
-      name: name,
-      quantity: quantity,
-    );
-
-    context.read<OrderBloc>().add(OrderEditItemEvent(widget.index!, newItem));
-
-    Navigator.of(context).pop();
+  bool areTypesValid() {
+    return (double.tryParse(_priceController.text) != null) && (int.tryParse(_quantityController.text) != null);
   }
 
   @override
@@ -113,9 +115,7 @@ class _ItemFormState extends State<FoodItemForm> {
             child: Row(
               children: [
                 ElevatedButton(
-                  onPressed: () {
-                    widget.isEdit ? editFoodItem() : createNewFoodItem();
-                  },
+                  onPressed: createFoodItem,
                   child: widget.isEdit ? const Text('Update') : const Text('Create'),
                 ),
                 const SizedBox(width: 20),
